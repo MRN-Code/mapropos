@@ -1,0 +1,163 @@
+.examples {
+    height: auto !important;
+    height: 200px;
+    margin: 0 auto;
+    width:100%;
+    box-shadow: 0px 2px 6px #999;
+    position:relative;
+    overflow:hidden;
+	background: url('../lib/images/bldg2_blur.jpg');
+	opacity: 1.0;
+	z-order:15;
+}
+
+.examples a {
+    text-decoration: none;
+}
+
+.examples .eslides {
+    max-width: 960px;
+    margin: 20px auto;
+
+}
+
+.examples .eslider {
+	z-index: 15;
+	/* Set rules to fill background */
+	min-height: 150px;
+	min-width: 550px;
+	/* Set up proportionate scaling */
+	width: 80%;
+	height: 180px;
+	/* Set up positioning */
+	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -40%;
+	margin-top: 10px;
+    margin-bottom:10px;
+    overflow:hidden;
+	background: #0A7C7A;
+
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+	background-position: left top;
+	/* Set up zoom behavior */
+	background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+	background-attachment: scroll;
+}
+
+.eslider ul {
+   margin: 0;
+   padding: 0;
+   position: relative;
+}
+
+.eslider li {
+   position: absolute;
+   top: 0px;
+   list-style: none;
+}
+
+.eslider li.automotive {
+   -webkit-animation: slide1 20s linear infinite;
+   animation: slide1 20s linear infinite;
+}
+
+.eslider li.finance {
+   -webkit-animation: slide2 20s linear infinite;
+   animation: slide2 20s linear infinite;
+}
+
+.eslider li.agriculture {
+   -webkit-animation: slide3 20s linear infinite;
+   animation: slide3 20s linear infinite;
+}
+
+.eslider li.healthcare {
+   -webkit-animation: slide4 20s linear infinite;
+   animation: slide4 20s linear infinite;
+}
+
+.eslider: hover li,
+.eslider: hover .progress-bar {
+   -moz-animation-play-state: paused;
+   -webkit-animation-play-state: paused;
+   animation-play-state: paused;
+}
+
+/* ANIMATION */
+/* webkit */
+@-webkit-keyframes slide1 {
+   0%  { visibility: shown; }
+   25% { visibility: hidden; } 
+   100%{ visibility:shown;}
+}
+
+@-webkit-keyframes slide2 {
+   0%  { left: -125px; opacity: 0; z-index:0;}
+   20% { left: -125px; opacity: 0.2; z-index:0; }
+   25% { left: 0px; opacity: 1; z-index:10;}
+   45% { left: 0px; opacity: 1; z-index:10; }
+   50% { left: 125px; opacity: 0.2; z-index: 0; }
+   51% { left: 125px; opacity: 0; z-index: -2; }
+   100%{ left: -125px; opacity: 0; z-index: -2; }
+}
+
+@-webkit-keyframes slide3 {
+   0%  { left: -125px; opacity: 0; z-index:-2;}
+   45% { left: -125px; opacity: 0; z-index:10;}
+   50% { left: 0px; opacity: 1; z-index:10;}
+   70% { left: 0px; opacity: 1; z-index:10;}
+   75% { left: 125px; opacity: 0.2; z-index:10;}
+   80% { left: 125px; opacity: 0; z-index: -2; }
+   100%{ left: -125px; opacity: 0; z-index: -2; }
+}
+
+@-webkit-keyframes slide4 {
+   0%  { left: -125px; opacity: 0; z-index:0;}
+   70% { left: -125px; opacity: 0.2; z-index:10; }
+   75% { left: 0px; opacity: 1.0; z-index:10;}
+   95% { left: 0px; opacity: 1.0; z-index:10;}z-index:-2;
+   99% { left: 125px; opacity: 0.2; z-index: 10; }
+   100%{ left: 125px; opacity: 0; z-index: -2; }
+}
+
+/* standard */
+@keyframes slide1 {
+   0%  { visibility:shown;}
+   20% { visibility:hidden; }
+   100%{ visibility:shown;}
+}
+
+@keyframes slide2 {
+   0%  { left: -125px; opacity: 0; z-index:-2;}
+   20% { left: -125px; opacity: 0.2; z-index:-2; }
+   25% { left: 0px; opacity: 1; z-index:10;}
+   45% { left: 0px; opacity: 1; z-index:10; }
+   50% { left: 125px; opacity: 0.2; z-index: 0; }
+   51% { left: 125px; opacity: 0; z-index: -2; }
+   100%{ left: -125px; opacity: 0; z-index: -2; }
+}
+
+@keyframes slide3 {
+   0%  { left: -125px; opacity: 0; z-index:-2;}
+   45% { left: -125px; opacity: 0; z-index:10;}
+   50% { left: 0px; opacity: 1; z-index:10;}
+   70% { left: 0px; opacity: 1; z-index:10;}
+   75% { left: 125px; opacity: 0.2; z-index:10;}
+   80% { left: 125px; opacity: 0; z-index: -2; }
+   100%{ left: -125px; opacity: 0; z-index: -2; }
+}
+
+@keyframes slide4 {
+   0%  { left: -125px; opacity: 0; z-index:-2;}
+   70% { left: -125px; opacity: 0.2; z-index:10; }
+   75% { left: 0px; opacity: 1.0; z-index:10;}
+   95% { left: 0px; opacity: 1.0; z-index:10;}z-index:-2;
+   99% { left: 125px; opacity: 0.2; z-index: 10; }
+   100%{ left: 125px; opacity: 0; z-index: -2; }
+}
+
