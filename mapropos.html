@@ -3,570 +3,567 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-	  <link rel="stylesheet" href="css/styles.css" type="text/css"/>
-	  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'/>
-		<script src="lib/d3.v3.min.js" charset="utf-8"></script>
-		<script src="lib/colorStringStandalone.js" charset="utf-8"></script>
-		<script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
-		<script src="js/Hyphenator.js" type="text/javascript"></script>
-		<script src="js/datacube.img.slicer.min.js" type="text/javascript"
-				charset="utf-8"></script>
-		<script type="text/javascript"
-				src="js/jquery.immersive-slider.min.js"></script>
-        <script src="js/dat.gui.min.js" charset="utf-8"></script>
-        <script src="js/rsvp.min.js" charset="utf-8"></script>
-        <script src="js/szpath.js" charset="utf-8"></script>
+      <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'/>
+        <script src="lib/d3.v3.min.js" charset="utf-8"></script>
+        <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+        <script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
+        <script src="lib/Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript"
+                src="lib/jquery.immersive-slider.min.js"></script>
+        <script src="lib/dat.gui.min.js" charset="utf-8"></script>
+        <script src="lib/rsvp.min.js" charset="utf-8"></script>
+        <script src="js/datacube.img.slicer.min.js" type="text/javascript"
+                charset="utf-8"></script>
+        <script src="js/vis_src/szhc/szpath.js" charset="utf-8"></script>
+        <script src="js/vis_src/hdp/hdp.js" charset="utf-8"></script>
 
-		<link href="css/immersive-slider.css" rel="stylesheet" type="text/css">
-		  <script type="text/javascript">
-			var allReady = function () {
-            jQuery("#slicer_loading").fadeOut(1000, function fadeMRIslicerIn(){
-            var jqC = jQuery("canvas");
-            jqC.toggle("slow");
+        <link href="css/immersive-slider.css" rel="stylesheet" type="text/css">
+
+        <script type="text/javascript">
+            function dataCubeComplete () {
+                jQuery("#slicer_loading").fadeOut(1000, function fadeMRIslicerIn(){
+                    var jqC = jQuery("canvas");
+                    jqC.toggle("slow");
+                });
+            }
+
+            function szComplete () {
+                jQuery('#mdots_loading').fadeOut(1000, function fadeSZIn(){
+                    var jqC = jQuery("#mdots_view");
+                    jqC.toggle("slow");
+                });
+            }
+
+            jQuery(document).ready(function() {
+                var offset = 50;
+                var duration = 500;
+
+                // datacube
+                var mriConfig = {
+                    data: "TT2.json",
+                    target: ".slicer_view",
+                    drawColor: "black",
+                    cb: dataCubeComplete,
+                    gap: 0,
+                    gauge: false,
+                    invertTransparency: true,
+                    idleAnimation: false,
+                    idleAnimationPercentage: 0.1,
+                    mouseout: "slide-to-center",
+                    mouseoutDelay: 250,
+                    mouseoutAnimationDur: 500,
+                    transparentExtremes: true
+                };
+                var mri = new datacubeSlicer(mriConfig);
+
+                var sz = new SZ({
+                    cb: szComplete,
+                    target: "#mdots_view"
+                });
+
+                jQuery("#immersive_slider").immersive_slider({
+                    animation: "fade",
+                    slideSelector: ".slide",
+                    container: ".examples",
+                    cssBlur: false,
+                    pagination: true,
+                    loop: true,
+                    autoStart: false
+                });
+
+                jQuery(window).scroll(function() {
+                    if (jQuery(this).scrollTop() > offset) {
+                        jQuery('.back-to-top').fadeIn(duration);
+                    } else {
+                        jQuery('.back-to-top').fadeOut(duration);
+                    }
+                });
+
+                jQuery('.back-to-top').click(function(event) {
+                    event.preventDefault();
+                    jQuery('html, body').animate({scrollTop: 0}, duration);
+                    return false;
+                })
             });
-			}
-
-			jQuery(document).ready(function() {
-			var offset = 50;
-			var duration = 500;
-			jQuery(window).scroll(function() {
-			if (jQuery(this).scrollTop() > offset) {
-            jQuery('.back-to-top').fadeIn(duration);
-			} else {
-            jQuery('.back-to-top').fadeOut(duration);
-			}
-			});
-			
-			jQuery('.back-to-top').click(function(event) {
-			event.preventDefault();
-			jQuery('html, body').animate({scrollTop: 0}, duration);
-			return false;
-			})
-			});
-
-			$(window).resize(function(){
-			if($('#temp').width() * 100/$(document).width() > 50) {
-            $('#arrow').removeClass('fa-angle-left').addClass('fa-angle-up'); 
-			}
-			else{
-			$('#arrow').removeClass('fa-angle-up').addClass('fa-angle-left');}
-			});
-
-			$(window).resize(function(){
-			if($('#sz').width() * 100/$(document).width() > 50) {
-            $('#arrow2').removeClass('fa-angle-right').addClass('fa-angle-double-down'); 
-			}
-			else{
-			$('#arrow2').removeClass('fa-angle-double-down').addClass('fa-angle-right');}
-			});
-
-			Hyphenator.config({
-			minwordlength : 1,
-			defaultlanguage: 'en',
-			useCSS3hyphenation: true
-			});
-			Hyphenator.run();
-		  </script>
-
-		</head>
-
-		<body>
-		  <div class="top_banner">
-			<div class="bldg"></div>
-			<ul id="sdt_menu" class="sdt_menu">
-			  <li>
-				<a href="#">
-				  <span class="sdt_wrap">
-					<span class="sdt_link">Blog</span>
-					<span class="sdt_descr">updates</span>
-				  </span>
-				</a>
-			  </li>
-			  <li>
-				<a href="#">
-				  <span class="sdt_wrap">
-					<span class="sdt_link">About us</span>
-					<span class="sdt_descr">who we are</span>
-				  </span>
-				</a>
-			  </li>
-			  <li>
-				<a href="#">
-				  <span class="sdt_wrap">
-					<span class="sdt_link">Contact</span>
-					<span class="sdt_descr">hire us</span>
-				  </span>
-				</a>
-			  </li>
-			  <li>
-				<a href="#">
-				  <span class="sdt_wrap">
-					<span class="sdt_link">Company</span>
-					<span class="sdt_descr">what we do</span>
-				  </span>
-				</a>
-			  </li>
-			</ul>
-			<div class="slideb">
-				<div id="indicator">
-				  <i class="fa fa-play"></i>
-				</div>
-			  <div class="slider">
-				<ul>
-				  <li class="manage">
-					<div class="h2">MANAGE LARGE AND COMPLEX DATASETS</div>
-
-					<div   class="p2 hyphenate text" align="justify">
-					  Оur team  of scientists has extensive  experience with
-					  managing   extremely  complex   data  sets.    We  can
-					  streamline  your   data  capture,   organization,  and
-					  exploration,   enabling  rapid   processing  while
-					  maintaining the highest levels of security
-					</div>
-				  </li>
-
-				  <li class="analyze">
-					<div class="h2">ANALYZE HIDDEN PATTERNS in DATA</div>
-
-					<div   class="p2 hyphenate text" align="justify">
-					  All data tells a story.  Our expertise with causal and
-					  machine learning  will tease  out the  important story
-					  hidden behind your data and help you better understand
-					  the patterns and variables impacting your business.
-					</div>
-				  </li>
-				  <li class="predict">
-					<div class="h2">PREDICT RELATIONSHIPS AND OUTCOMES</div>
-					<div   class="p2 hyphenate text" align="justify">
-					  The true value  of data analysis is in  the ability to
-					  predict  future trends.   Our  predictive modeling  is
-					  designed to  uncover previously  unknown relationships
-					  and provide valuable insights  into the inner workings
-					  of your business.
-					</div>
-				  </li>
-				  <li class="share">
-					<div class="h2">SHARE DATA IN A SECURE ENVIRONMENT</div>
-					<div   class="p2 hyphenate text" align="justify">
-					  Our   experience   designing  secure   HIPAA-compliant
-					  data-management  systems  will  enable you  to  share,
-					  collaborate and perform privacy-protected computations
-					  in a multi-site environment.
-					</div>
-				  </li>
-				</ul>
-
-	  		  </div>
-			</div>
-			<div class="slogan">
-			  <div class="words">
-				<div class="p3 hyphenate text" align="justify">
-				  Data mining is about rendering complex data (numbers, images,
-				  text, etc.) into a form that is more intuitive and easy to
-				  understand.
-
-				  We   describe    this   process   with    the   word
-				  "<strong>mapping</strong>".
-
-				  Thus, we  create a map  of your data that  helps you
-				  find meaning in them.  We  believe we are one of the
-				  best companies in the world in doing this.
-				</div>
-			  </div>
-			</div>
-		  </div>
-			<div class="slogan3">
-			  <div class="section group">
-				<div class="col span_2_of_2">
-				  <div class="h3 hyphenate  text" align="center"> With
-					mapropos,  you  can  <strong>map</strong>  various
-					domains  including   transportation,  agriculture,
-					healthcare, and finance
-				  </div>
-			  	</div>
-			  </div>
-			</div>
-
-			<div class="examples">
-			  <div class="eslides">
-				<div id="immersive_slider">
-
-				  <div class="slide"
-					   data-blurred="lib/images/auto_table_blur.png">
-					<div class="content">
-					  <div class="h2">Transportation</div>
-					  <ul>
-						<li class="p2">
-						  Predicting parts failures before they occur
-						</li>
-						<li class="p2">
-						  Reducing traffic congestion to clean up cities
-						</li>
-						<li class="p2">
-						  Personalizing maintenance schedule
-						</li>
-					  </ul>
-					</div>
-					<div class="image">
-					  <img src="lib/images/auto_table.png" alt="Slider 1">
-					</div>
-				  </div>
-
-				  <div class="slide"
-					   data-blurred="lib/images/tractor_blur.png">
-					  <div class="content">
-						<div class="h2">Agriculture</div>
-						<ul>
-						  <li class="p2">
-							Optimizing crop yield for the environment
-						  </li>
-						  <li class="p2">
-							Detecting disease using remote sensing data
-						  </li>
-						  <li class="p2">
-							Segmenting crop by quality based on images
-						  </li>
-						</ul>
-					  </div>
-					  <div class="image">
-						<img src="lib/images/tractor_s.png" alt="Slider 1">
-					  </div>
-				  </div>
-
-				  <div class="slide"
-					   data-blurred="lib/images/ambulance_blur.png">
-					<div class="content">
-					  <div class="h2">Healthcare</div>
-					  <ul>
-						<li class="p2">
-						  Keeping people out of the emergency room
-						</li>
-						<li class="p2">
-						  Lowering  costs  by forecasting  disease
-						  onsets
-						</li>
-						<li class="p2">
-						  Predicting effective  treatment type for
-						  a patient
-						</li>
-					  </ul>
-					</div>
-					<div class="image">
-					  <img src="lib/images/ambulance.png" alt="Ambulance"/>
-					</div>
-				  </div>
-
-				  <div class="slide"
-					   data-blurred="lib/images/finance_blur.png">
-					<div class="content">
-					  <div class="h2">Finance and Banking</div>
-					  <ul>
-						<li class="p2">
-						  Identifying struggling  companies from
-						  market metrics
-						</li>
-						<li class="p2">
-						  more
-						</li>
-						<li class="p2">
-						  more
-						</li>
-					  </ul>
-					</div>
-					<div class="image">
-					  <img src="lib/images/finance.png" alt="Finance"/>
-					</div>
-				  </div>
-
-					<a href="#" class="is-prev">
-					  <i class="fa fa-angle-left"></i>
-					</a>
-					<a href="#" class="is-next">
-					  <i class="fa fa-angle-right"></i>
-					</a>
-				</div>
-			  </div>
-			</div>
-
-					<script type="text/javascript">
-  					  $(document).ready( function() {
-					  $("#immersive_slider").immersive_slider({
-					  animation: "fade",
-					  slideSelector: ".slide", 
-					  container: ".examples",
-					  cssBlur: false,
-					  pagination: true,
-					  loop: true,
-					  autoStart: false
-					  });
-					  });
-					</script>
-
-				<div class="slogan3">
-				  <div class="section group">
-					<div class="col span_2_of_2">
-					  <div class="h3 hyphenate text" align="center">
-						Our  skill  with  data mining  was  forged  by
-						mapping the  most complex system known  to man:
-						the human brain
-					  </div>
-					</div>
-				  </div>
-				</div>
-		  <div class="brains">
-			<div class="section group" style="height:10px"></div>
-			<div class="section group">
-			  <div class="col bspan_2_of_3">
-				<div class="slicer_view">
-				  <div id="slicer_loading" align="center">
-				  <i class="fa fa-spinner fa-spin fa-5x"></i>
-				  </div>
-				  <script type="text/javascript">
-					window.onload = function goGoGadgetDatacubeSlicer () {
-					// Config
-					//http://en.wikipedia.org/wiki/Magnetic_resonance_imaging
-					var mriConfig = {
-					data: "TT2.json",
-					target: ".slicer_view",
-					drawColor: "black",
-					cb: allReady,
-					gap: 0,
-					gauge: false,
-					invertTransparency: true,
-					idleAnimation: false,
-					idleAnimationPercentage: 0.1,
-					mouseout: "slide-to-center",
-					mouseoutDelay: 250,
-					mouseoutAnimationDur: 500,
-					transparentExtremes: true
-					};
-					var mri = new datacubeSlicer(mriConfig);
-					}
-				  </script>
-				</div>
-			  </div>
-			  <div id="temp" class="col bspan_1_of_3">
-				<div class="section group">
-				  <div class="col span_1_of_10">
-					<div class="p2 evening" align="left">
-					  <i id="arrow" class="fa fa-angle-left"></i>
-					</div>
-				  </div>
-				  <div class="col span_4_of_5">
-					<div class="p2 evening hyphenate text" align="justify">
-					  Mapping activity onto cortex,  we have been able
-					  to  use brain  imaging  to learn  about how  the
-					  "MIND" works
-					</div>
-				  </div>
-				  <div class="col span_1_of_10">
-				  </div>
-			  	</div>
-			  </div>
-			</div>
-			<div class="section group" style="height:50px"></div>
-			<div class="section group">
-				<div id="sz" class="col bspan_1_of_3 righty">
-				  <div class="section group">
-					<div class="col span_1_of_10"></div>
-					<div class="col span_4_of_5">
-					  <div    class="p2   evening    hyphenate   text"
-						   align="justify"> Mapping  tens of thousands
-						   of  measurements in  a  brain  scan onto  a
-						   single  point  on  a map,  we  can  predict
-						   mental disorders such as schizophrenia
-					  </div>
-					</div>
-					<div class="col span_1_of_10">
-					<div class="p2 evening" align="right">
-					  <i id="arrow2" class="fa fa-angle-right"></i>
-					</div>
-					</div>
-			  	  </div>
-			  	</div>
-				<div class="col bspan_2_of_3">
-				  <div class="mdots_view">
-					<!-- <div id="mdots_loading" align="center"> -->
-					<!--   <i class="fa fa-spinner fa-spin fa-5x"></i> -->
-					<!-- </div> -->
-					<script type="text/javascript">
-					  var sz = new SZ({
-					  cb:  function() { 
-					  console.log("All sz data is " +
-                      "loaded and images painted");},
-					  target: "#mdots_view"
-					  });
-					</script>
-					<!-- <img src="lib/images/deep_learning_divide_and_concur_loop.gif" -->
-							  <!-- alt="animate" style="width: 100%;max-height: 100%"> -->
-				  </div>
-				</div>
-			</div>
-			<div class="section group" style="height:50px"></div>
-			<div class="section group">
-				<div class="col span_2_of_3">
-				  Huntington disease example here
-				</div>
-				<div class="col span_1_of_3 righty">
-				  <div class="section group">
-					<div class="col span_1_of_10">
-					  <div class="p2 evening" align="left">
-						<i class="fa fa-angle-left"></i>
-					  </div>
-					</div>
-					<div class="col span_4_of_5">
-					  <div class="p2 evening hyphenate text" align="justify">
-						These  maps  are  useful tools  for  revealing
-						further subcategories  of people who  are part
-						of hidden groups
-					  </div>
-					</div>
-					<div class="col span_1_of_10"></div>
-					</div>
-			  	  </div>
-			  	</div>
-			<div class="section group" style="height:30px"></div>
-			</div>
-				<div class="slogan3">
-				  <div class="section group">
-					<div class="col span_1_of_12"></div>
-					<div class="col span_10_of_12">
-					  <div class="h3 hyphenate text" align="center">
-					Our expertise is general and applicable to data in
-					different domains at levels from low to high
-					  </div>
-			  		</div>
-			  		<div class="col span_1_of_12"></div>
-				  </div>
-				</div>
-
-			<div class="detailed_example">
-			  <div class="section group">
-				<div class="col span_2_of_3">
-				  <div class="section group">
-					<div class="col span_1_of_10">
-					</div>
-					<div class="col span_4_of_5">
-					  <div class="h2">For example:</div>
-					  <div class="p2 hyphenate text"
-						   align="justify">    Our    machine-learning
-						techniques  can be  applied to  financial data
-						from  publicly available  SEC data  sets.  Our
-						algorithms  can take  SEC  data  and learn  to
-						predict  which companies  will likely  go into
-						bankruptcy with high levels of accuracy. It is
-						this  type  of   expertise  that  can  provide
-						financial institutions  and equity  firms with
-						critical information  as they  analyze markets
-						and  weigh  investment options.   
-
-						<p       class="p2       hyphenate       text"
-						   align="justify">Training   on   data   from
-						   failed   companies,   our  algorithms   can
-						   "learn" to predict which companies would go
-						   into  bankruptcy within  5 years  with over
-						   80% accuracy.
-						</div>
-					</div>
-					<div class="col span_1_of_10"></div>
-					</div>
-
-					  </div>
-					  <div class="col span_1_of_3">
-						<img src="lib/images/finance_r.png"
-							 alt="animate" style="width:
-							 100%;max-height: 100%">
-					  </div>
-					</div>
-				  </div>
-				<div class="slogan3">
-				  <div class="section group">
-					<div class="col span_1_of_12"></div>
-					<div class="col span_10_of_12">
-					  <div class="h3 hyphenate text" align="center">
-						We can help you navigate your data by
-						providing you their clear map
-					  </div>
-			  		</div>
-			  		<div class="col span_1_of_12"></div>
-				  </div>
-				</div>
-				  <div class="footer">
-					<div class="section group">
-					  <div class="col span_1_of_2">
-						<div class="h2"  style="padding-left:10px">Contact us</div>
-						<dl>
-						  <dt class="h4">Phone</dt>
-						  <dd><div class="p2">505 272 5028</div></dd>
-						  <dt class="h4">Address</dt>
-						  <dd><div  class="p2">1101   Yale  Blvd.  NE,
-							Albuquerque, New Mexico 87106</div></dd>
-						</dl>
-					  </div>
-					  <div class="col span_1_of_2">
-
-						<div class="h2">Let us contact you</div>
-						<div class="form-main">
-						  <div class="form-div">
-							<form class="form" id="form1">
-
-							  <p class="email">
-								<input name="email" type="text"
-								class="validate[required,custom[email]]
-								feedback-input" id="email"
-								placeholder="Email" />
-							  </p>
-
-							  <div class="submit">
-							  	<input type="submit" value="EMAIL ME"  id="button-blue"/>
-							  	<div class="forease"></div>
-							  </div>
-							</form>
-						  </div>
-						</div>
-
-						<!-- <div class="form-main"> -->
-						<!--   <div class="form-div"> -->
-						<!-- 	<form class="form" id="form1"> -->
-						<!-- 	  <p class="name"> -->
-						<!-- 		<input name="name" type="text" -->
-						<!-- 		class="validate[required, -->
-						<!-- 		custom[onlyLetter], length[0,100]] -->
-						<!-- 		feedback-input" value="&#xf002;" -->
-						<!-- 		placeholder="Name" id="name" /> -->
-						<!-- 	  </p> -->
-
-						<!-- 	  <p class="email"> -->
-						<!-- 		<input name="email" type="text" -->
-						<!-- 		class="validate[required,custom[email]] -->
-						<!-- 		feedback-input" id="email" -->
-						<!-- 		placeholder="Email" /> -->
-						<!-- 	  </p> -->
-
-						<!-- 	  <p class="text"> -->
-						<!-- 		<textarea name="text" -->
-						<!-- 		class="validate[required,length[6,300]] -->
-						<!-- 		feedback-input" id="comment" -->
-						<!-- 		placeholder="Comment"></textarea> -->
-						<!-- 	  </p> -->
 
 
-						<!-- 	  <div class="submit"> -->
-						<!-- 		<input type="submit" value="SEND" -->
-						<!-- 		id="button-blue"/> -->
-						<!-- 		<div class="ease"></div> -->
-						<!-- 	  </div> -->
-						<!-- 	</form> -->
-						<!--   </div> -->
-						<!-- </div> -->
+            $(window).resize(function(){
+                if($('#temp').width() * 100/$(document).width() > 50) {
+                $('#arrow').removeClass('fa-angle-left').addClass('fa-angle-up');
+            } else{
+                $('#arrow').removeClass('fa-angle-up').addClass('fa-angle-left');}
+            });
 
-					  </div>
-					</div>
-				  </div>
-				  <a href="#" class="back-to-top" >
-					<i class="fa fa-chevron-up"></i>
-				  </a>
-				</body>
+            $(window).resize(function(){
+                if($('#sz').width() * 100/$(document).width() > 50) {
+                $('#arrow2').removeClass('fa-angle-right').addClass('fa-angle-double-down');
+            } else{
+                $('#arrow2').removeClass('fa-angle-double-down').addClass('fa-angle-right');}
+            });
 
-			  </html>
+            Hyphenator.config({
+                minwordlength : 1,
+                defaultlanguage: 'en',
+                useCSS3hyphenation: true
+            });
+            Hyphenator.run();
+          </script>
+
+        </head>
+
+        <body>
+          <div class="top_banner">
+            <div class="bldg"></div>
+            <ul id="sdt_menu" class="sdt_menu">
+              <li>
+                <a href="#">
+                  <span class="sdt_wrap">
+                    <span class="sdt_link">Blog</span>
+                    <span class="sdt_descr">updates</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="sdt_wrap">
+                    <span class="sdt_link">About us</span>
+                    <span class="sdt_descr">who we are</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="sdt_wrap">
+                    <span class="sdt_link">Contact</span>
+                    <span class="sdt_descr">hire us</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="sdt_wrap">
+                    <span class="sdt_link">Company</span>
+                    <span class="sdt_descr">what we do</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+            <div class="slideb">
+                <div id="indicator">
+                  <span class="fa fa-play"></span>
+                </div>
+              <div class="slider">
+                <ul>
+                  <li class="manage">
+                    <div class="h2">MANAGE LARGE AND COMPLEX DATASETS</div>
+
+                    <div   class="p2 hyphenate text" align="justify">
+                      Оur team  of scientists has extensive  experience with
+                      managing   extremely  complex   data  sets.    We  can
+                      streamline  your   data  capture,   organization,  and
+                      exploration,   enabling  rapid   processing  while
+                      maintaining the highest levels of security
+                    </div>
+                  </li>
+
+                  <li class="analyze">
+                    <div class="h2">ANALYZE HIDDEN PATTERNS in DATA</div>
+
+                    <div   class="p2 hyphenate text" align="justify">
+                      All data tells a story.  Our expertise with causal and
+                      machine learning  will tease  out the  important story
+                      hidden behind your data and help you better understand
+                      the patterns and variables impacting your business.
+                    </div>
+                  </li>
+                  <li class="predict">
+                    <div class="h2">PREDICT RELATIONSHIPS AND OUTCOMES</div>
+                    <div   class="p2 hyphenate text" align="justify">
+                      The true value  of data analysis is in  the ability to
+                      predict  future trends.   Our  predictive modeling  is
+                      designed to  uncover previously  unknown relationships
+                      and provide valuable insights  into the inner workings
+                      of your business.
+                    </div>
+                  </li>
+                  <li class="share">
+                    <div class="h2">SHARE DATA IN A SECURE ENVIRONMENT</div>
+                    <div   class="p2 hyphenate text" align="justify">
+                      Our   experience   designing  secure   HIPAA-compliant
+                      data-management  systems  will  enable you  to  share,
+                      collaborate and perform privacy-protected computations
+                      in a multi-site environment.
+                    </div>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+            <div class="slogan">
+              <div class="words">
+                <div class="p3 hyphenate text" align="justify">
+                  Data mining is about rendering complex data (numbers, images,
+                  text, etc.) into a form that is more intuitive and easy to
+                  understand.
+
+                  We   describe    this   process   with    the   word
+                  "<strong>mapping</strong>".
+
+                  Thus, we  create a map  of your data that  helps you
+                  find meaning in them.  We  believe we are one of the
+                  best companies in the world in doing this.
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="slogan3">
+              <div class="section group">
+                <div class="col span_2_of_2">
+                  <div class="h3 hyphenate  text" align="center"> With
+                    mapropos,  you  can  <strong>map</strong>  various
+                    domains  including   transportation,  agriculture,
+                    healthcare, and finance
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="examples">
+              <div class="eslides">
+                <div id="immersive_slider">
+
+                  <div class="slide"
+                       data-blurred="lib/images/auto_table_blur.png">
+                    <div class="content">
+                      <div class="h2">Transportation</div>
+                      <ul>
+                        <li class="p2">
+                          Predicting parts failures before they occur
+                        </li>
+                        <li class="p2">
+                          Reducing traffic congestion to clean up cities
+                        </li>
+                        <li class="p2">
+                          Personalizing maintenance schedule
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="image">
+                      <img src="lib/images/auto_table.png" alt="Slider 1">
+                    </div>
+                  </div>
+
+                  <div class="slide"
+                       data-blurred="lib/images/tractor_blur.png">
+                      <div class="content">
+                        <div class="h2">Agriculture</div>
+                        <ul>
+                          <li class="p2">
+                            Optimizing crop yield for the environment
+                          </li>
+                          <li class="p2">
+                            Detecting disease using remote sensing data
+                          </li>
+                          <li class="p2">
+                            Segmenting crop by quality based on images
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="image">
+                        <img src="lib/images/tractor_s.png" alt="Slider 1">
+                      </div>
+                  </div>
+
+                  <div class="slide"
+                       data-blurred="lib/images/ambulance_blur.png">
+                    <div class="content">
+                      <div class="h2">Healthcare</div>
+                      <ul>
+                        <li class="p2">
+                          Keeping people out of the emergency room
+                        </li>
+                        <li class="p2">
+                          Lowering  costs  by forecasting  disease
+                          onsets
+                        </li>
+                        <li class="p2">
+                          Predicting effective  treatment type for
+                          a patient
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="image">
+                      <img src="lib/images/ambulance.png" alt="Ambulance"/>
+                    </div>
+                  </div>
+
+                  <div class="slide"
+                       data-blurred="lib/images/finance_blur.png">
+                    <div class="content">
+                      <div class="h2">Finance and Banking</div>
+                      <ul>
+                        <li class="p2">
+                          Identifying struggling  companies from
+                          market metrics
+                        </li>
+                        <li class="p2">
+                          more
+                        </li>
+                        <li class="p2">
+                          more
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="image">
+                      <img src="lib/images/finance.png" alt="Finance"/>
+                    </div>
+                  </div>
+
+                    <a href="#" class="is-prev">
+                      <span class="fa fa-angle-left"></span>
+                    </a>
+                    <a href="#" class="is-next">
+                      <span class="fa fa-angle-right"></span>
+                    </a>
+                </div>
+              </div>
+            </div>
+                <div class="slogan3">
+                  <div class="section group">
+                    <div class="col span_2_of_2">
+                      <div class="h3 hyphenate text" align="center">
+                        Our  skill  with  data mining  was  forged  by
+                        mapping the  most complex system known  to man:
+                        the human brain
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          <div class="brains">
+            <div class="section group" style="height:10px"></div>
+            <div class="section group">
+              <div class="col bspan_2_of_3">
+                <div class="slicer_view">
+                  <div id="slicer_loading" align="center">
+                  <span class="fa fa-spinner fa-spin fa-5x"></span>
+                  </div>
+                </div>
+              </div>
+              <div id="temp" class="col bspan_1_of_3">
+                <div class="section group">
+                  <div class="col span_1_of_10">
+                    <div class="p2 evening" align="left">
+                      <span id="arrow" class="fa fa-angle-left"></span>
+                    </div>
+                  </div>
+                  <div class="col span_4_of_5">
+                    <div class="p2 evening hyphenate text" align="justify">
+                      Mapping activity onto cortex,  we have been able
+                      to  use brain  imaging  to learn  about how  the
+                      "MIND" works
+                    </div>
+                  </div>
+                  <div class="col span_1_of_10">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section group" style="height:50px"></div>
+            <div class="section group">
+                <div id="sz" class="col bspan_1_of_3 righty">
+                  <div class="section group">
+                    <div class="col span_1_of_10"></div>
+                    <div class="col span_4_of_5">
+                      <div class="p2   evening    hyphenate   text"
+                           align="justify"> Mapping  tens of thousands
+                           of  measurements in  a  brain  scan onto  a
+                           single  point  on  a map,  we  can  predict
+                           mental disorders such as schizophrenia
+                      </div>
+                    </div>
+                    <div class="col span_1_of_10">
+                    <div class="p2 evening" align="right">
+                      <span id="arrow2" class="fa fa-angle-right"></span>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col bspan_2_of_3">
+                  <div id="mdots_loading" align="center">
+                    <span class="fa fa-spinner fa-spin fa-5x"></span>
+                  </div>
+                  <div id="mdots_view">
+                    <!-- <img src="lib/images/deep_learning_divide_and_concur_loop.gif" -->
+                              <!-- alt="animate" style="width: 100%;max-height: 100%"> -->
+                  </div>
+                </div>
+            </div>
+            <div class="section group" style="height:50px"></div>
+            <div class="section group">
+                <div class="col span_2_of_3">
+                  Huntington disease example here
+                </div>
+                <div class="col span_1_of_3 righty">
+                  <div class="section group">
+                    <div class="col span_1_of_10">
+                      <div class="p2 evening" align="left">
+                        <span class="fa fa-angle-left"></span>
+                      </div>
+                    </div>
+                    <div class="col span_4_of_5">
+                      <div class="p2 evening hyphenate text" align="justify">
+                        These  maps  are  useful tools  for  revealing
+                        further subcategories  of people who  are part
+                        of hidden groups
+                      </div>
+                    </div>
+                    <div class="col span_1_of_10"></div>
+                    </div>
+                  </div>
+                </div>
+            <div class="section group" style="height:30px"></div>
+            </div>
+                <div class="slogan3">
+                  <div class="section group">
+                    <div class="col span_1_of_12"></div>
+                    <div class="col span_10_of_12">
+                      <div class="h3 hyphenate text" align="center">
+                    Our expertise is general and applicable to data in
+                    different domains at levels from low to high
+                      </div>
+                    </div>
+                    <div class="col span_1_of_12"></div>
+                  </div>
+                </div>
+
+            <div class="detailed_example">
+              <div class="section group">
+                <div class="col span_2_of_3">
+                  <div class="section group">
+                    <div class="col span_1_of_10">
+                    </div>
+                    <div class="col span_4_of_5">
+                      <div class="h2">For example:</div>
+                      <div class="p2 hyphenate text"
+                           align="justify">    Our    machine-learning
+                        techniques  can be  applied to  financial data
+                        from  publicly available  SEC data  sets.  Our
+                        algorithms  can take  SEC  data  and learn  to
+                        predict  which companies  will likely  go into
+                        bankruptcy with high levels of accuracy. It is
+                        this  type  of   expertise  that  can  provide
+                        financial institutions  and equity  firms with
+                        critical information  as they  analyze markets
+                        and  weigh  investment options.
+
+                        <p       class="p2       hyphenate       text"
+                           align="justify">Training   on   data   from
+                           failed   companies,   our  algorithms   can
+                           "learn" to predict which companies would go
+                           into  bankruptcy within  5 years  with over
+                           80% accuracy.
+                        </div>
+                    </div>
+                    <div class="col span_1_of_10"></div>
+                    </div>
+
+                      </div>
+                      <div class="col span_1_of_3">
+                        <img src="lib/images/finance_r.png"
+                             alt="animate" style="width:
+                             100%;max-height: 100%">
+                      </div>
+                    </div>
+                  </div>
+                <div class="slogan3">
+                  <div class="section group">
+                    <div class="col span_1_of_12"></div>
+                    <div class="col span_10_of_12">
+                      <div class="h3 hyphenate text" align="center">
+                        We can help you navigate your data by
+                        providing you their clear map
+                      </div>
+                    </div>
+                    <div class="col span_1_of_12"></div>
+                  </div>
+                </div>
+                  <div class="footer">
+                    <div class="section group">
+                      <div class="col span_1_of_2">
+                        <div class="h2"  style="padding-left:10px">Contact us</div>
+                        <dl>
+                          <dt class="h4">Phone</dt>
+                          <dd><div class="p2">505 272 5028</div></dd>
+                          <dt class="h4">Address</dt>
+                          <dd><div  class="p2">1101   Yale  Blvd.  NE,
+                            Albuquerque, New Mexico 87106</div></dd>
+                        </dl>
+                      </div>
+                      <div class="col span_1_of_2">
+
+                        <div class="h2">Let us contact you</div>
+                        <div class="form-main">
+                          <div class="form-div">
+                            <form class="form" id="form1">
+
+                              <p class="email">
+                                <input name="email" type="text"
+                                class="validate[required,custom[email]]
+                                feedback-input" id="email"
+                                placeholder="Email" />
+                              </p>
+
+                              <div class="submit">
+                                <input type="submit" value="EMAIL ME"  id="button-blue"/>
+                                <div class="forease"></div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <!-- <div class="form-main"> -->
+                        <!--   <div class="form-div"> -->
+                        <!--    <form class="form" id="form1"> -->
+                        <!--      <p class="name"> -->
+                        <!--        <input name="name" type="text" -->
+                        <!--        class="validate[required, -->
+                        <!--        custom[onlyLetter], length[0,100]] -->
+                        <!--        feedback-input" value="&#xf002;" -->
+                        <!--        placeholder="Name" id="name" /> -->
+                        <!--      </p> -->
+
+                        <!--      <p class="email"> -->
+                        <!--        <input name="email" type="text" -->
+                        <!--        class="validate[required,custom[email]] -->
+                        <!--        feedback-input" id="email" -->
+                        <!--        placeholder="Email" /> -->
+                        <!--      </p> -->
+
+                        <!--      <p class="text"> -->
+                        <!--        <textarea name="text" -->
+                        <!--        class="validate[required,length[6,300]] -->
+                        <!--        feedback-input" id="comment" -->
+                        <!--        placeholder="Comment"></textarea> -->
+                        <!--      </p> -->
+
+
+                        <!--      <div class="submit"> -->
+                        <!--        <input type="submit" value="SEND" -->
+                        <!--        id="button-blue"/> -->
+                        <!--        <div class="ease"></div> -->
+                        <!--      </div> -->
+                        <!--    </form> -->
+                        <!--   </div> -->
+                        <!-- </div> -->
+
+                      </div>
+                    </div>
+                  </div>
+                  <a href="#" class="back-to-top" >
+                    <span class="fa fa-chevron-up"></span>
+                  </a>
+                </body>
+
+              </html>
