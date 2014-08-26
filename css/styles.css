@@ -35,10 +35,10 @@
     opacity:1.0;
     /* Set rules to fill background */
     min-height: 440px;
-    min-width: 200px;   
+    min-width: 200px;
     /* Set up proportional scaling */
     width: 100%;
-    height: auto;   
+    height: auto;
     /* Set up positioning */
     position: absolute;
     top: 0;
@@ -46,7 +46,7 @@
     transition: all 0.5s ease-in-out;
     background position: left top;
     /* Set up zoom behavior */
-    background-size: cover; 
+    background-size: cover;
     -moz-background-size: cover;
     -webkit-background-size: cover;
     background-attachment: scroll;
@@ -172,7 +172,7 @@ ul.sdt_menu li span.sdt_wrap:hover > span.sdt_descr {
 #HEADER-LINE,
 .h2,
 .header-line{
-    text-transform: uppercase;  
+    text-transform: uppercase;
     font-weight: bold;
     line-height: 200%;
     text-rendering: optimizelegibility;
@@ -193,12 +193,12 @@ ul.sdt_menu li span.sdt_wrap:hover > span.sdt_descr {
     line-height: 120%;
     text-align: "justify";
     font-family: "open sans";
-    text-rendering: optimizelegibility; 
+    text-rendering: optimizelegibility;
 }
 /* COLORS */
 #WHITE,
 .p2,
-.p3, 
+.p3,
 .white {
     color: #ffffff;
 }
@@ -398,7 +398,7 @@ font[Attributes Style] {
     opacity: 1.0;
     background-position: bottom left;
 }
-                
+
 
 /*  SECTIONS  */
 .section {
@@ -491,31 +491,64 @@ canvas {
     display: none;
 }
 .slicer_view {
+    box-shadow: 0px 0px 10px rgba(150, 150, 255, 0.8);
     clear: both;
+    cursor: crosshair;
     margin: 0 auto;
     width: 665px;
 }
 
-#mdots_view {
-    display: none;
+#mdots_view, #hdp_view {
     clear: both;
-    width: 665px;
+    box-shadow: 0px 0px 10px rgb(61, 102, 137);
+    display: none;
+    overflow: hidden;
+    width: 100% ;
+}
+
+#mdots_view {
+    height: 300px;
+}
+#hdp {
+    float: right;
+    margin-right: 30px;
+}
+
+#data_gui_hdp {
+    float: left;
+    position: relative;
+    left: 10px;
+    top: 10px;
+    z-index: 6;
+}
+
+#sz {
+    position: relative;
+    z-index: 5;
+}
+
+#data_gui_sz {
+    float: right;
+    position: relative;
+    right: 15px;
+    top: -250px;
+    z-index: 6;
 }
 
 /*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
 
 @media only screen and (max-width: 480px) {
-    .col { 
+    .col {
         margin: 1% 0 1% 0%;
     }
 }
 
 @media only screen and (max-width: 480px) {
     .span_3_of_3 {
-        width: 100%; 
+        width: 100%;
     }
     .span_2_of_3 {
-        width: 100%; 
+        width: 100%;
     }
     .span_1_of_3 {
         width: 100%;
@@ -531,54 +564,54 @@ canvas {
 
 @media  handheld{
     .bspan_1_of_3 {
-        width: 100%; 
+        width: 100%;
     }
     .bspan_2_of_3 {
-        width: 100%; 
+        width: 100%;
     }
 }
 @media  screen and (max-width: 870px) {
     .bspan_1_of_3 {
-        width: 100%; 
+        width: 100%;
     }
     .bspan_2_of_3 {
-        width: 100%; 
+        width: 100%;
     }
 }
 
 @media only screen and (max-width: 480px) {
     .span_12_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_11_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_10_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_9_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_8_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_7_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_6_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_5_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_4_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_3_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_2_of_12 {
-        width: 100%; 
+        width: 100%;
     }
     .span_1_of_12 {
         width: 100%;
@@ -597,7 +630,7 @@ canvas {
     display: none;
 }
 
-.back-to-top:hover {    
+.back-to-top:hover {
     background-color: rgba(135, 135, 135, 0.1);
 }
-                    
+

@@ -3,42 +3,71 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-      <link rel="stylesheet" href="css/styles.css" type="text/css"/>
-      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+            rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'/>
-        <script src="lib/d3.v3.min.js" charset="utf-8"></script>
+        <link href="css/immersive-slider.css" rel="stylesheet" type="text/css">
         <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+        <script src="lib/dat.gui.min.js" charset="utf-8"></script>
         <script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
+        <script src="lib/d3.v3.min.js" charset="utf-8"></script>
+        <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
         <script src="lib/Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript"
                 src="lib/jquery.immersive-slider.min.js"></script>
-        <script src="lib/dat.gui.min.js" charset="utf-8"></script>
         <script src="lib/rsvp.min.js" charset="utf-8"></script>
+        <script src="lib/underscore-min.js"></script>
         <script src="js/datacube.img.slicer.min.js" type="text/javascript"
                 charset="utf-8"></script>
         <script src="js/vis_src/szhc/szpath.js" charset="utf-8"></script>
         <script src="js/vis_src/hdp/hdp.js" charset="utf-8"></script>
-
-        <link href="css/immersive-slider.css" rel="stylesheet" type="text/css">
-
+        <script src="js/vis_src/logo/logo.js" charset="utf-8"></script>
         <script type="text/javascript">
+            RSVP.on('error', function(d) {
+                console.error("uncatched rejection of promise", d);
+                if (d instanceof Error && d.stack) console.error(d.stack);
+            });
+        </script>
+        <script type="text/javascript">
+            "use strict";
+            var mri, sz, hdp, logo;
+
+            function logoComplete () {
+                return; //noop
+            }
+
             function dataCubeComplete () {
-                jQuery("#slicer_loading").fadeOut(1000, function fadeMRIslicerIn(){
+                jQuery("#slicer_loading").fadeOut(150, function fadeMRIslicerIn(){
                     var jqC = jQuery("canvas");
-                    jqC.toggle("slow");
+                    jqC.toggle(150);
                 });
             }
 
             function szComplete () {
                 jQuery('#mdots_loading').fadeOut(1000, function fadeSZIn(){
                     var jqC = jQuery("#mdots_view");
-                    jqC.toggle("slow");
+                    jqC.toggle(150);
+                    sz.useColor.click();
+                });
+            }
+
+            function hdpComplete () {
+                jQuery('#hdp_loading').fadeOut(1000, function fadeSZIn(){
+                    var jqC = jQuery("#hdp_view");
+                    jqC.toggle(150);
+                    hdp.chkCogDecline.click();
                 });
             }
 
             jQuery(document).ready(function() {
                 var offset = 50;
                 var duration = 500;
+
+                logo = new Logo({
+                    cb: logoComplete,
+                    id: "maproposLogo"
+                });
 
                 // datacube
                 var mriConfig = {
@@ -56,11 +85,20 @@
                     mouseoutAnimationDur: 500,
                     transparentExtremes: true
                 };
-                var mri = new datacubeSlicer(mriConfig);
+                mri = new datacubeSlicer(mriConfig);
 
-                var sz = new SZ({
+                sz = new SZ({
                     cb: szComplete,
+                    gui_id: "data_gui_sz",
                     target: "#mdots_view"
+                });
+
+                hdp = new HDP({
+                    cb: hdpComplete,
+                    id: "hdp",
+                    guiBefore: true,
+                    gui_id: "data_gui_hdp",
+                    target: "#hdp_view"
                 });
 
                 jQuery("#immersive_slider").immersive_slider({
@@ -114,7 +152,7 @@
         </head>
 
         <body>
-          <div class="top_banner">
+          <div id="top_banner" class="top_banner">
             <div class="bldg"></div>
             <ul id="sdt_menu" class="sdt_menu">
               <li>
@@ -394,16 +432,16 @@
                   <div id="mdots_loading" align="center">
                     <span class="fa fa-spinner fa-spin fa-5x"></span>
                   </div>
-                  <div id="mdots_view">
-                    <!-- <img src="lib/images/deep_learning_divide_and_concur_loop.gif" -->
-                              <!-- alt="animate" style="width: 100%;max-height: 100%"> -->
-                  </div>
+                  <div id="mdots_view"></div>
                 </div>
             </div>
             <div class="section group" style="height:50px"></div>
             <div class="section group">
                 <div class="col span_2_of_3">
-                  Huntington disease example here
+                  <div id="hdp_loading" align="center">
+                    <span class="fa fa-spinner fa-spin fa-5x"></span>
+                  </div>
+                  <div id="hdp_view"></div>
                 </div>
                 <div class="col span_1_of_3 righty">
                   <div class="section group">
